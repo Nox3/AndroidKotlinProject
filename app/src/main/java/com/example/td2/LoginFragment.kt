@@ -1,6 +1,7 @@
     package com.example.td2
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -47,18 +48,25 @@ class LoginFragment : Fragment() {
 
                 val loginform= LoginForm(email.text.toString(), password.text.toString())
                 coroutineScope.launch {
-                   val response= Api.userService.login(loginform)
+                   val response= Api./*INSTANCE.*/userService.login(loginform)
                     if(response.isSuccessful){
                         val token=response.body()?.token
-                        TokenToPreference(token)// Tester si le token est null car s'il est nul on doit envoyer un message d'erreur à l'utilisateur (cf toast juste en bas)
+                        if(token!=null) {
+                            TokenToPreference(token)
+                            val intent = Intent(context, MainActivity::class.java)
+                            //afficher les tâches
+                            startActivity(intent)
 
+                        }
+                        else Toast.makeText(context, "token null", Toast.LENGTH_LONG).show()
                     }
+
                 }
 
 
             }
             else {
-                Toast.makeText(context, "text", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Formulaire non rempli", Toast.LENGTH_LONG).show()
             }
     }
     return view

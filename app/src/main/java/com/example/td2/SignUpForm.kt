@@ -1,4 +1,3 @@
 package com.example.td2
 
-class SignUpForm {
-}
+data class SignUpForm(val firstname : String, val lastname : String, val email : String, val password : String, val password_confirmation : String)

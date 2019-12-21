@@ -15,7 +15,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class TaskFragment : Fragment()
+class  TaskFragment : Fragment()
 {
     private val coroutineScope = MainScope()
     private val tasksRepository = TaskRepository()

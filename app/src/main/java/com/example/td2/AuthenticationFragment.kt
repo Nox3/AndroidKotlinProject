@@ -1,6 +1,7 @@
 package com.example.td2
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -37,6 +38,7 @@ class AuthenticationFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_authentication, container, false)
         val signupbutton= view.signup
         val loginbutton=view.login
+        val settingsbutton=view.settingsbutton
         signupbutton.setOnClickListener {
             findNavController().navigate(R.id.action_authenticationFragment_to_signupFragment)
 
@@ -46,7 +48,11 @@ class AuthenticationFragment : Fragment() {
             findNavController().navigate(R.id.action_authenticationFragment_to_loginFragment)
 
         }
+        settingsbutton.setOnClickListener {
 
+            val settings = Intent(context, SettingsActivity::class.java)
+            startActivity(settings)
+        }
         return view
     }
 
