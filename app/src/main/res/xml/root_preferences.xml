@@ -28,10 +28,12 @@
         app:key="PolicePreference"
         app:title="Police Preferences">
 
-        <Preference
+        <ListPreference
             app:key="PoliceColor"
             app:title="Police Color"
-            app:summary="Change the color of the police"/>
+            app:summary="Change the color of the police"
+            app:entries="@array/background_color_names_array"
+            app:entryValues="@array/background_color_values_array"/>
 
     </PreferenceCategory>
 

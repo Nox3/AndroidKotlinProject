@@ -2,6 +2,7 @@
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import com.example.td2.network.Api
 import kotlinx.android.synthetic.main.fragment_login.view.*
 import kotlinx.coroutines.MainScope
@@ -38,11 +40,18 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_login, container, false)
         val buttonlogin=view.login
         val email=view.mail
         val password= view.password
+        val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(context)
+        val colortext=sharedpreferences.getString("PoliceColor", "")
+        email.setTextColor(Color.parseColor(colortext))
+        password.setTextColor(Color.parseColor(colortext))
+
+
         buttonlogin.setOnClickListener {
             if(!email.text.toString().isEmpty() && !password.text.toString().isEmpty()){
 
