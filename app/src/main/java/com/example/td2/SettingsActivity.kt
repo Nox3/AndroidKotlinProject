@@ -1,6 +1,13 @@
 package com.example.td2
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.preference.*
 
 class SettingsActivity : AppCompatActivity() {
@@ -28,15 +35,25 @@ class SettingsActivity : AppCompatActivity() {
             val mybar = (activity as AppCompatActivity).supportActionBar
             mybar?.setTitle(appBarTitlePreference?.text)
             val appBarColorPreference: ListPreference? = findPreference("AppBarColor")
+            val appStyleColorPreference : ListPreference?= findPreference("PolicePreference")
             val colorchosen = appBarColorPreference?.value
-            //if (colorchosen != null) {
-               // mybar?.setBackgroundDrawable(getDrawable(activity as AppCompatActivity, colorchosen.toInt()))
-            //}
+                if(colorchosen!=null){
+                    mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorchosen)))
 
-            //mybar?.setBackgroundDrawable(new ColorDrawable("AppBarColor"));
-            //mybar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this!!.context!!,
-            //  appBarColorPreference?.value?.toColorInt()!!
-            //)))
+
+                }
+            /*if (colorchosen != null) {
+                mybar?.setBackgroundDrawable(getDrawable(activity as AppCompatActivity, colorchosen.toInt()))
+            }
+
+            mybar?.setBackgroundDrawable(new ColorDrawable("AppBarColor"));
+            mybar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this!!.context!!,
+              appBarColorPreference?.value?.toColorInt()!!
+            )))*/
+           /*val colorpolice= appStyleColorPreference?.value
+                if (colorpolice!=null){
+
+                }*/
 
             super.onDisplayPreferenceDialog(preference)
 
