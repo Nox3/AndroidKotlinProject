@@ -5,6 +5,9 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,8 +17,14 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
+import com.example.td2.network.Api
+import kotlinx.android.synthetic.main.activity_user_info.*
 import kotlinx.android.synthetic.main.header_fragment.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.io.InputStream
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -25,18 +34,36 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class UserInfoActivity : AppCompatActivity() {
+    companion object {
+        const val CAMERA_PERMISSION_CODE = 1000
+        const val CAMERA_REQUEST_CODE = 2001
+        const val IMAGE=1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_info)
+        val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(this)
+        val title= sharedpreferences.getString("title", "")
+
+        val colorBar=sharedpreferences.getString("ColorBar", "")
+        // val mybar =(activity as AppCompatActivity).supportActionBar
+        val mybar= supportActionBar
+        if(title!=null){
+            mybar?.setTitle(title)}
+        if(colorBar!= null){
+            mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))}
         val button = findViewById<Button>(R.id.take_picture_button)
         button.setOnClickListener(View.OnClickListener { askCameraPermissionAndOpenCamera() })
+        val upload_button=upload_image_button
+        upload_button.setOnClickListener {
+            val intent= Intent()
+            intent.action=Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(intent, ""), IMAGE)
+        }
     }
 
-    companion object {
-        const val CAMERA_PERMISSION_CODE = 1000
-        const val CAMERA_REQUEST_CODE = 2001
-    }
+
 
     private fun askCameraPermissionAndOpenCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -77,7 +104,7 @@ class UserInfoActivity : AppCompatActivity() {
         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
     }
 
-    private fun handlePhotoTaken(data: Intent?) {
+    /*private fun handlePhotoTaken(data: Intent?) {
         val image = data?.extras?.get("data") as? Bitmap
         val imageBody = imageToBody(image)
 
@@ -85,10 +112,32 @@ class UserInfoActivity : AppCompatActivity() {
         val imageViewA = findViewById<ImageView>(R.id.imageView2)
         Glide.with(this).load(imageBody).into(imageViewA)
 
-        // Plus tard : Envoie de l'avatar au serveur
+        // Plus tard : Envoie    de l'avatar au serveur
+    }*/
+    private fun handlePhotoTaken(data: Intent?) {
+        val image = data?.extras?.get("data") as? Bitmap
+        val imageBody = imageToBody(image)
+
+        Glide.with(this).load(imageBody).fitCenter().into(imageView)
+
+        if(imageBody == null) return
+        MainScope().launch {
+            Api/*.INSTANCE*/.userService.updateAvatar(imageBody)
+        }
+
+    }
+    private fun handleChosenPicture(data: Intent?) {
+        if(data?.data == null) return
+        val inputStream: InputStream? = contentResolver.openInputStream(data.data!!)
+        val bmp = BitmapFactory.decodeStream(inputStream)
+
+
+
     }
 
-    // Vous pouvez ignorer cette fonction...
+
+
+
     private fun imageToBody(image: Bitmap?): MultipartBody.Part? {
         val f = File(cacheDir, "tmpfile.jpg")
         f.createNewFile()
@@ -110,11 +159,27 @@ class UserInfoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             handlePhotoTaken(data)
         }
         else {
-            super.onActivityResult(requestCode, resultCode, data)
+            handleChosenPicture(data)
+
         }
     }
+    override fun onRestart() {
+        val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(this)
+        val title= sharedpreferences.getString("title", "")
+
+        val colorBar=sharedpreferences.getString("ColorBar", "")
+        // val mybar =(activity as AppCompatActivity).supportActionBar
+        val mybar= supportActionBar
+        if(title!=null){
+            mybar?.setTitle(title)}
+        if(colorBar!= null){
+            mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))}
+        super.onRestart()
+    }
+
 }

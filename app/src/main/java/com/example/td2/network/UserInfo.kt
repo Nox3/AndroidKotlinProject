@@ -1,5 +1,6 @@
 package com.example.td2.network
 
+import android.media.Image
 import com.squareup.moshi.Json
 
 data class UserInfo (
@@ -9,5 +10,7 @@ val email: String,
 @Json(name = "firstname")
 val firstname: String,
 @Json(name = "lastname")
-val lastname: String
+val lastname: String,
+@Json(name="avatar")
+val avatar: String?
 )

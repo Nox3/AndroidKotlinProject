@@ -1,5 +1,6 @@
 package com.example.td2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,14 @@ class HeaderFragment : Fragment()
             }
 
         }
+
+        val avatar= imageView
+        avatar.isClickable=true
+        avatar.setOnClickListener {
+            val newAvatarIntent= Intent(context, UserInfoActivity::class.java)
+            startActivity(newAvatarIntent)
+        }
+
     }
 
     override fun onDestroy() {
