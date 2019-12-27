@@ -32,11 +32,11 @@ class HeaderFragment : Fragment()
     override fun onResume() {
         super.onResume()
         Glide.with(this).load("https://goo.gl/gEgYUd").apply(RequestOptions.circleCropTransform()).into(imageView)
-        coroutineScope.launch {Api.userService.getInfo()}
-        coroutineScope.launch {Api.taskService.getTasks()}
+        coroutineScope.launch {Api.INSTANCE.userService.getInfo()}
+        coroutineScope.launch {Api.INSTANCE.taskService.getTasks()}
         val text=user_name
         coroutineScope.launch{
-            val response = Api.userService.getInfo()
+            val response = Api.INSTANCE.userService.getInfo()
             Toast.makeText(activity, response.toString(), Toast.LENGTH_LONG).show()
             if(response.isSuccessful) {
                 val userName = response.body()?.firstname + " " + response.body()?.lastname

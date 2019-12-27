@@ -1,27 +1,32 @@
 package com.example.td2.network
 
 import android.content.Context
+import androidx.preference.PreferenceManager
+import com.example.td2.SHARED_PREF_TOKEN_KEY
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-/*class*/ object Api/*(private val context: Context)*/
+class /* object*/ Api(private val context: Context)
 {
-    /*companion object{*/
-        private const val  BASE_URL = /*"https://android-tasks-api.herokuapp.com/api/v1/users/sign_up"*/"https://android-tasks-api.herokuapp.com/api/"
-        private const val TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3NSwiZXhwIjoxNjA4NDczMjUxfQ.bN2mQ2VWvqeQoLmNFUc0Dm1xf7y_izbLYUdLGVhtF6Q"
+
+    companion object{
+
+        private const val  BASE_URL = "https://android-tasks-api.herokuapp.com/api/"
+        //private const val TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3NSwiZXhwIjoxNjA4NDczMjUxfQ.bN2mQ2VWvqeQoLmNFUc0Dm1xf7y_izbLYUdLGVhtF6Q"
         //"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMSwiZXhwIjoxNjA3NTIyOTA3fQ.tYaDnTB44QE58cavFQ5eBrz4Xv5ztx-6LrHkUpdR-b4"
-
-       //lateinit var INSTANCE: Api
-    /*}*/
-
+       lateinit var INSTANCE: Api
+    }
+    /*private val TOKEN =PreferenceManager.getDefaultSharedPreferences(context).getString(
+        SHARED_PREF_TOKEN_KEY, "")*/
     private val moshi = Moshi.Builder().build()
     private val okHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor {chain ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $TOKEN")
+                    .addHeader("Authorization", "Bearer ${PreferenceManager.getDefaultSharedPreferences(context).getString(
+                        SHARED_PREF_TOKEN_KEY, "")}")
                     .build()
                 chain.proceed(newRequest)
             }

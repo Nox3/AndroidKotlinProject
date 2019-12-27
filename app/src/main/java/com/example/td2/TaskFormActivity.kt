@@ -9,11 +9,14 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.example.td2.network.Api
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class TaskFormActivity : AppCompatActivity() {
 
-
+    private val coroutineScope = MainScope()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_form)
@@ -35,7 +38,7 @@ class TaskFormActivity : AppCompatActivity() {
         if(intent.hasExtra("isEdit")){
 
             textTitle.setText(intent.getStringExtra("title"))
-            textdescription.setText(intent.getStringExtra("descritpion"))
+            textdescription.setText(intent.getStringExtra("description"))
 
         }
 
@@ -43,7 +46,13 @@ class TaskFormActivity : AppCompatActivity() {
             val createActivityIntent : Intent = Intent(this, MainActivity::class.java)
             val title = findViewById<TextView>(R.id.title).text.toString()
             val description = findViewById<TextView>(R.id.description).text.toString()
-            TaskViewModel.tasks.add( Task("id_$title", title, description))
+            coroutineScope.launch{
+                val response = Api.INSTANCE.taskService.createTask( Task("id_$title", title, description))
+                if(response.isSuccessful){
+                    TaskViewModel.tasks.add( Task("id_$title", title, description))
+                 }
+                }
+
 
             startActivity(createActivityIntent)
         }

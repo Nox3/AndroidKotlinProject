@@ -65,7 +65,7 @@ class SignupFragment : Fragment() {
             if(!email.text.toString().isEmpty() && !password.text.toString().isEmpty() && !password_conf.text.toString().isEmpty() ){
                 val signupform= SignUpForm(firstname.text.toString(), lastname.text.toString(), email.text.toString(), password.text.toString(), password_conf.text.toString())
                 coroutineScope.launch {
-                    val response = Api./*INSTANCE.*/userService.signup(signupform)
+                    val response = Api.INSTANCE.userService.signup(signupform)
                     if (response.isSuccessful) {
                         val token = response.body()?.token
                         if (token != null) {
@@ -76,6 +76,7 @@ class SignupFragment : Fragment() {
 
                         } else Toast.makeText(context, "token null", Toast.LENGTH_LONG).show()
                     }
+                    Toast.makeText(context, "Pb request", Toast.LENGTH_LONG).show()
                 }
             }
             else {
@@ -88,10 +89,14 @@ class SignupFragment : Fragment() {
 
     fun TokenToPreference(token: String){
 
-        context?.getSharedPreferences("Contraintes", Context.MODE_PRIVATE)?.edit {
+        context?.getSharedPreferences("Token", Context.MODE_PRIVATE)?.edit {
             putString(SHARED_PREF_TOKEN_KEY, token)
         }
         //PreferenceManager.getDefaultSharedPreferences(context).edit {
 
     }
+
+
+
+
 }

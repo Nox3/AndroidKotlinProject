@@ -20,11 +20,11 @@ class  TaskFragment : Fragment()
 {
     private val coroutineScope = MainScope()
     private val tasksRepository = TaskRepository()
-    //private val tasks = mutableListOf<Task>()
-    //private val taskAdapter = TaskAdapter(tasks)
+    private val tasks = mutableListOf<Task>()
+    private val taskAdapter = TaskAdapter(tasks)
 
     override fun onCreateView(
-        /*inflater: LayoutInflater,
+        inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -32,8 +32,9 @@ class  TaskFragment : Fragment()
         view.task_view.adapter = taskAdapter
         view.task_view.layoutManager = LinearLayoutManager(context)
 
-        return view*/
-        inflater: LayoutInflater,
+
+        return view
+      /*  inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -43,29 +44,29 @@ class  TaskFragment : Fragment()
         val view = inflater.inflate(R.layout.task_fragment, container, false)
         view.task_view.adapter = adapter
         view.task_view.layoutManager = LinearLayoutManager(context)
-        return view
+        return view*/
     }
 
-   /* override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         // subscribe the fragment to task update
         tasksRepository.getTasks().observe(this, Observer {
             if( it != null){
                 tasks.clear()
                 tasks.addAll(it)
                 //Log.e("task ", it.toString())
-                //taskAdapter.notifyDataSetChanged()
+                taskAdapter.notifyDataSetChanged()
 
             }
         })
         super.onCreate(savedInstanceState)
-    }*/
-    override fun onSaveInstanceState(outState: Bundle) {
+    }
+    /*override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArrayList("tasks", tasks)
         super.onSaveInstanceState(outState)
-    }
+    }*/
     override fun onResume() {
         coroutineScope.launch {
-            Api.userService.getInfo()
+            Api.INSTANCE.userService.getInfo()
         }
         super.onResume()
     }

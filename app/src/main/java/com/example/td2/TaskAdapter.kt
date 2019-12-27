@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.td2.network.Api
 import kotlinx.android.synthetic.main.item_task.view.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.MainScope
 
 
 class TaskAdapter(private val tasks : MutableList<Task>) : RecyclerView.Adapter<TaskViewHolder>()
 {
    private lateinit var truc : ViewGroup
+    private val coroutineScope = MainScope()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         truc=parent
         return TaskViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false))
@@ -22,8 +26,18 @@ class TaskAdapter(private val tasks : MutableList<Task>) : RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(tasks[position])
+        /*holder.bind(tasks[position])
         holder.itemView.button_delete.setOnClickListener { onDeleteClickListener(tasks[position]) }
+        holder.itemView.edit.setOnClickListener { onEditClickListener(tasks[position], truc ) }*/
+        holder.bind(tasks[position])
+        holder.itemView.button_delete.setOnClickListener {
+            coroutineScope.launch{
+                val response = Api.INSTANCE.taskService.deleteTask(tasks[position].id)
+                if(response.isSuccessful){
+                    onDeleteClickListener(tasks[position])
+                }
+            }
+        }
         holder.itemView.edit.setOnClickListener { onEditClickListener(tasks[position], truc ) }
     }
 
@@ -34,13 +48,21 @@ class TaskAdapter(private val tasks : MutableList<Task>) : RecyclerView.Adapter<
 
     private fun onEditClickListener(task: Task, parent: ViewGroup)
     {
-        val intent = Intent(parent.context , TaskFormActivity::class.java)
-        intent.putExtra("title", task.title)
-        intent.putExtra("isEdit", "edit")
-        intent.putExtra("description", task.description)
-        tasks.remove(task)
+        coroutineScope.launch{
+            val response = Api.INSTANCE.taskService.deleteTask(task.id)
+            if(response.isSuccessful){
+                onDeleteClickListener(task)
+                val intent = Intent(parent.context , TaskFormActivity::class.java)
+                intent.putExtra("title", task.title)
+                intent.putExtra("isEdit", "edit")
+                intent.putExtra("description", task.description)
+                tasks.remove(task)
 
-        startActivity(parent.context, intent, null)
+                startActivity(parent.context, intent, null)
+            }
+        }
+
+
     }
 
 }

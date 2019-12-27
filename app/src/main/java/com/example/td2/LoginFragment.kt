@@ -57,7 +57,7 @@ class LoginFragment : Fragment() {
 
                 val loginform= LoginForm(email.text.toString(), password.text.toString())
                 coroutineScope.launch {
-                   val response= Api./*INSTANCE.*/userService.login(loginform)
+                   val response= Api.INSTANCE.userService.login(loginform)
                     if(response.isSuccessful){
                         val token=response.body()?.token
                         if(token!=null) {
@@ -89,10 +89,11 @@ class LoginFragment : Fragment() {
 
     fun TokenToPreference(token: String){
 
-            context?.getSharedPreferences("Contraintes", Context.MODE_PRIVATE)?.edit {
+            context?.getSharedPreferences("Token", Context.MODE_PRIVATE)?.edit {
                 putString(SHARED_PREF_TOKEN_KEY, token)
             }
         //PreferenceManager.getDefaultSharedPreferences(context).edit {
 
     }
+
 }
