@@ -55,11 +55,12 @@ class SignupFragment : Fragment() {
         val password_conf=view.confirmpassword
         val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(context)
         val colortext=sharedpreferences.getString("PoliceColor", "")
+        if(colortext!=""){
         email.setTextColor(Color.parseColor(colortext))
         password.setTextColor(Color.parseColor(colortext))
         firstname.setTextColor(Color.parseColor(colortext))
         lastname.setTextColor(Color.parseColor(colortext))
-        password_conf.setTextColor(Color.parseColor(colortext))
+        password_conf.setTextColor(Color.parseColor(colortext))}
 
         buttonsignup.setOnClickListener {
             if(!email.text.toString().isEmpty() && !password.text.toString().isEmpty() && !password_conf.text.toString().isEmpty() ){
@@ -89,10 +90,12 @@ class SignupFragment : Fragment() {
 
     fun TokenToPreference(token: String){
 
-        context?.getSharedPreferences("Token", Context.MODE_PRIVATE)?.edit {
+
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit {
             putString(SHARED_PREF_TOKEN_KEY, token)
         }
-        //PreferenceManager.getDefaultSharedPreferences(context).edit {
+
 
     }
 

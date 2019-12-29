@@ -14,23 +14,30 @@ class /* object*/ Api(private val context: Context)
     companion object{
 
         private const val  BASE_URL = "https://android-tasks-api.herokuapp.com/api/"
-        //private const val TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3NSwiZXhwIjoxNjA4NDczMjUxfQ.bN2mQ2VWvqeQoLmNFUc0Dm1xf7y_izbLYUdLGVhtF6Q"
+
+        /*private const val TOKEN = ""*//*eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3NSwiZXhwIjoxNjA4NDczMjUxfQ.bN2mQ2VWvqeQoLmNFUc0Dm1xf7y_izbLYUdLGVhtF6Q"
         //"eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMSwiZXhwIjoxNjA3NTIyOTA3fQ.tYaDnTB44QE58cavFQ5eBrz4Xv5ztx-6LrHkUpdR-b4"
-       lateinit var INSTANCE: Api
+       */
+        lateinit var INSTANCE: Api
     }
-    /*private val TOKEN =PreferenceManager.getDefaultSharedPreferences(context).getString(
-        SHARED_PREF_TOKEN_KEY, "")*/
+
+    private val TOKEN =PreferenceManager.getDefaultSharedPreferences(context).getString(
+        SHARED_PREF_TOKEN_KEY, "")
     private val moshi = Moshi.Builder().build()
     private val okHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor {chain ->
                 val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer ${PreferenceManager.getDefaultSharedPreferences(context).getString(
-                        SHARED_PREF_TOKEN_KEY, "")}")
+                    .addHeader("Authorization", "Bearer ${token()}")
                     .build()
                 chain.proceed(newRequest)
             }
             .build()
+    }
+
+    fun token() :String {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(
+            SHARED_PREF_TOKEN_KEY, "")?: ""
     }
 
     private val retrofit = Retrofit.Builder()
@@ -41,5 +48,7 @@ class /* object*/ Api(private val context: Context)
 
     val userService: UserService by lazy { retrofit.create(UserService::class.java)}
     val taskService: TaskService by lazy { retrofit.create(TaskService::class.java)}
+
+
 }
 

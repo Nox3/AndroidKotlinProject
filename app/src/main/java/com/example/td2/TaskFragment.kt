@@ -34,17 +34,6 @@ class  TaskFragment : Fragment()
 
 
         return view
-      /*  inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val temp =  savedInstanceState?.getParcelableArrayList<Task>("tasks") ?: tasks
-        tasks = temp
-        val adapter = TaskAdapter(temp)
-        val view = inflater.inflate(R.layout.task_fragment, container, false)
-        view.task_view.adapter = adapter
-        view.task_view.layoutManager = LinearLayoutManager(context)
-        return view*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,17 +42,13 @@ class  TaskFragment : Fragment()
             if( it != null){
                 tasks.clear()
                 tasks.addAll(it)
-                //Log.e("task ", it.toString())
                 taskAdapter.notifyDataSetChanged()
 
             }
         })
         super.onCreate(savedInstanceState)
     }
-    /*override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList("tasks", tasks)
-        super.onSaveInstanceState(outState)
-    }*/
+
     override fun onResume() {
         coroutineScope.launch {
             Api.INSTANCE.userService.getInfo()

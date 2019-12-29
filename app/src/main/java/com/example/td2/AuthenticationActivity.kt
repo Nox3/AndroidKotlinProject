@@ -13,16 +13,16 @@ class AuthenticationActivity : AppCompatActivity() {
 
 
         setContentView(R.layout.activity_authentication)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(this)
         val title= sharedpreferences.getString("title", "")
 
        val colorBar=sharedpreferences.getString("ColorBar", "")
        // val mybar =(activity as AppCompatActivity).supportActionBar
         val mybar= supportActionBar
-        if(title!=null){
+        if(title!=""){
         mybar?.setTitle(title)}
-        if(colorBar!= null){
+        if(colorBar!= ""){
         mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))}
 
 
@@ -34,9 +34,9 @@ class AuthenticationActivity : AppCompatActivity() {
         val colorBar=sharedpreferences.getString("ColorBar", "")
         // val mybar =(activity as AppCompatActivity).supportActionBar
         val mybar= supportActionBar
-        if(title!=null){
+        if(title!=""){
             mybar?.setTitle(title)}
-        if(colorBar!= null){
+        if(colorBar!=""){
             mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))}
         super.onRestart()
     }

@@ -27,11 +27,15 @@ class TaskFormActivity : AppCompatActivity() {
         val colorBar=sharedpreferences.getString("ColorBar", "")
         val textTitle=findViewById<EditText>(R.id.title)
         val textdescription= findViewById<EditText>(R.id.description)
+        if(colortext!= ""){
         textTitle.setTextColor(Color.parseColor(colortext))
-        textdescription.setTextColor(Color.parseColor(colortext))
+        textdescription.setTextColor(Color.parseColor(colortext))}
+
         val mybar= supportActionBar
-        mybar?.setTitle(title)
-        mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))
+        if(title!=""){
+        mybar?.setTitle(title)}
+        if(colorBar!=""){
+        mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))}
 
 
         val intent= intent

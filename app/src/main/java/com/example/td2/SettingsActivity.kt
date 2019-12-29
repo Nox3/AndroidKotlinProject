@@ -7,11 +7,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.preference.*
+import android.content.SharedPreferences
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -22,29 +29,68 @@ class SettingsActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
             .commit()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(this)
-        val title= sharedpreferences.getString("title", "")
 
-        val colorBar=sharedpreferences.getString("ColorBar", "")
-        val mybar= supportActionBar
-        mybar?.setTitle(title)
-        mybar?.setBackgroundDrawable( ColorDrawable(Color.parseColor(colorBar)))
+        val sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val title = sharedpreferences.getString("title", "")
+
+        val colorBar = sharedpreferences.getString("ColorBar", "")
+        val mybar = supportActionBar
+        if(title!=""){
+        mybar?.setTitle(title)}
+        if(colorBar!=""){
+        mybar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(colorBar)))}
+
+
+       /*sharedpreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
+           if(s=="title"){
+
+               val title = sharedPreferences.getString("title", "")
+               mybar?.setTitle(title)
+
+
+           }
+           if(s== "ColorBar"){
+               val colorBar = sharedPreferences.getString("ColorBar", "")
+               mybar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(colorBar)))
+
+           }
+       }*/
+
 
     }
+
+
+
 
     class SettingsFragment : PreferenceFragmentCompat() {
 
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences , rootKey)
+            val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(context)
+            val mybar = (activity as AppCompatActivity).supportActionBar
 
+            /*sharedpreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, s ->
+                if(s=="title"){
+
+                    val title = sharedPreferences.getString("title", "")
+                    mybar?.setTitle(title)
+
+
+                }
+                if(s== "ColorBar"){
+                    val colorBar = sharedPreferences.getString("ColorBar", "")
+                    mybar?.setBackgroundDrawable(ColorDrawable(Color.parseColor(colorBar)))
+
+                }
+            }
+            */
 
         }
         override fun onDisplayPreferenceDialog(preference: Preference?) {
 
             val sharedpreferences= PreferenceManager.getDefaultSharedPreferences(context)
-           // val sharedpreferences= context?.getSharedPreferences("userpref", Context.MODE_PRIVATE)
+
             val appBarTitlePreference: EditTextPreference? = findPreference("AppBarTitle")
             val mybar = (activity as AppCompatActivity).supportActionBar
             mybar?.setTitle(appBarTitlePreference?.text)
@@ -69,10 +115,10 @@ class SettingsActivity : AppCompatActivity() {
                  }
 
 
-
             super.onDisplayPreferenceDialog(preference)
 
-            super.onDisplayPreferenceDialog(preference)
+
+
         }
 
 
@@ -82,7 +128,9 @@ class SettingsActivity : AppCompatActivity() {
 
 
 
+
     }
+
 
 
 }
