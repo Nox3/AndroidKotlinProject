@@ -37,7 +37,7 @@ class HeaderFragment : Fragment()
         val text=user_name
         coroutineScope.launch{
             val response = Api.INSTANCE.userService.getInfo()
-            Toast.makeText(activity, response.toString(), Toast.LENGTH_LONG).show()
+
             if(response.isSuccessful) {
                 val userName = response.body()?.firstname + " " + response.body()?.lastname
                 text.text = userName
